@@ -7,6 +7,7 @@
 namespace Drupal\pathauto\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Pathauto entity update action.
@@ -25,5 +26,13 @@ class UpdateAction extends ActionBase {
     $entity->path = new \stdClass();
     $entity->path->pathauto = TRUE;
     \Drupal::service('pathauto.manager')->updateAlias($entity, 'bulkupdate', array('message' => TRUE));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    $result = AccessResult::allowed();
+    return $return_as_object ? $result : $result->isAllowed();
   }
 }
